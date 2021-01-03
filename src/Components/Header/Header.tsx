@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -9,7 +9,10 @@ import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import MailIcon from "@material-ui/icons/Mail";
 import MoreIcon from "@material-ui/icons/MoreVert";
-import { Button } from "@material-ui/core";
+import { Button, Switch } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setTheme } from "../../modules/reducers/counterSlice";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -18,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   links: {
     flexGrow: 1,
     display: "grid",
-    gridTemplateColumns: "repeat(4,1fr)",
+    gridTemplateColumns: "repeat(3,1fr)",
   },
   title: {
     display: "none",
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
     [theme.breakpoints.up("md")]: {
       display: "grid",
-      gridTemplateColumns: "1fr 1fr",
+      gridTemplateColumns: "1fr 1fr 1fr",
       gridGap: "20px",
     },
   },
@@ -50,9 +53,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Header() {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+  const [theme, setThemeVal] = useState(false);
 
+  const handleChange = (event: any) => {
+    setThemeVal(!theme);
+    dispatch(setTheme(theme));
+  };
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -146,10 +155,8 @@ export default function Header() {
             CARENT
           </Typography>
           <div className={classes.links}>
-            <p>Home</p>
-            <p>Car Catalogue</p>
-            <p>Contact Us</p>
-            <p>Help</p>
+            <Link to="/">Home</Link>
+            <Link to="/contactUs">Contact Us</Link>
           </div>
           <div className={classes.sectionDesktop}>
             {/* <IconButton aria-label="show 4 new mails" color="inherit">
@@ -174,6 +181,13 @@ export default function Header() {
             </IconButton> */}
             <Button>Registar</Button>
             <Button variant="outlined">Sign in</Button>
+            <Switch
+              checked={theme}
+              onChange={handleChange}
+              color="primary"
+              name="checked"
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
